@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Lab 3</title> 
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <header>
+    <h1>Taxi Manager</h1>
+    <nav class="header__nav">
+      <a onclick="toggleMainPage()">Home</a>
+      <a onclick="toggleCreatePage()">Create</a>
+    </nav>
+    <div class="search_block">
+      <input placeholder="Type something..">
+      <button type="button" id="search_btn">Search</button>
+      <button type="button" id="cancel_search_btn" class="cancel-button">Cancel</button>
+    </div>
+  </header>
+
+
+  <main id="main_page" class="main__container">
+    <div class="main__container manager">
+      <div class="sort-goods">
+        <h3>Sort goods by price</h3>
+        <label class="switch">
+          <input type="checkbox" id="sort_items">
+          <span class="slider round"></span>
+        </label>
+      </div>
+      <div class="count-price">
+        <hr>
+        <h3>Count price of all goods</h3>
+        <button type="button" class="btn-primary" id="count_price_btn">Count</button>
+        <div id="counted_price">
+        </div>
+      </div>
+    </div>
+    <div class="main__container manager-orders">
+      <ul class="orders_list" id="orders_list">
+      </ul>
+    </div>
+  </main>
+  <main id="create_page" class="create__container">
+    <form id="add_form" class="add-form">
+      <h2>Create order for car</h2>
+      <div class="create-block">
+        <span>Client full name</span>
+        <input type="text" placeholder="Client name.." id="name_input">
+        <span >Destination</span>
+        <textarea type="text" placeholder="Destination.." id="destination_input"></textarea>
+        <span>Car brand:</span>
+        <select id="brand_input">
+          <option value="Shkoda">Shkoda</option>
+          <option value="Ford">Ford</option>
+          <option value="Kia">Kia</option>
+          <option value="Oppel">Oppel</option>
+          <option value="Audi">Audi</option>
+        </select>
+        <span>Order date:</span>
+        <input type="date" id="order_date_input">
+        <span>Price:</span>
+      <input placeholder="Price in $" type="number" id="price_input">
+      </div>
+      
+      
+      <button type="submit" class="btn-download" id="submit_btn">Add order</button>
+    </form>
+  </main>
+
+  <script src="js/index.js"></script>
+</body>
+
+</html>
