@@ -17,7 +17,7 @@
       <a onclick="toggleCreatePage()">Create</a>
     </nav>
     <div class="search_block">
-      <input placeholder="Type something..">
+      <input placeholder="Client name.." id="input_search">
       <button type="button" id="search_btn">Search</button>
       <button type="button" id="cancel_search_btn" class="cancel-button">Cancel</button>
     </div>
@@ -27,15 +27,15 @@
   <main id="main_page" class="main__container">
     <div class="main__container manager">
       <div class="sort-goods">
-        <h3>Sort goods by price</h3>
+        <h3>Sort orders by price</h3>
         <label class="switch">
-          <input type="checkbox" id="sort_items">
+          <input type="checkbox" id="sort_objects">
           <span class="slider round"></span>
         </label>
       </div>
       <div class="count-price">
         <hr>
-        <h3>Count price of all goods</h3>
+        <h3>Count price of all orders</h3>
         <button type="button" class="btn-primary" id="count_price_btn">Count</button>
         <div id="counted_price">
         </div>

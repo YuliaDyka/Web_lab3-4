@@ -6,6 +6,7 @@ const destinationInput = document.getElementById("destination_input");
 const brandInput = document.getElementById("brand_input");
 const order_dateInput = document.getElementById("order_date_input");
 const priceInput = document.getElementById("price_input");
+const input_search = document.getElementById("input_search")
 
 
 let objects = [];
@@ -43,6 +44,13 @@ const add_object_to_page = ({id, full_name, destination, car_brand, order_date, 
   );
 };
 
+const object_list_search = (objects) => {
+  object_container.innerHTML = "";
+  for (let obj of objects) {
+    add_object_to_page(obj)
+  }
+}
+
 const get_values = () => {
   return {
     full_name: nameInput.value,
@@ -72,8 +80,9 @@ const add_object = ({full_name, destination, car_brand, order_date, price}) => {
 // Event Block
 
 const add_button = document.getElementById("submit_btn")
-
-
+const search_button = document.getElementById("search_btn")
+const cancel_button = document.getElementById("cancel_search_btn")
+const sort_button = document.getElementById("sort_objects")
 
 add_button.addEventListener("click", (event) => {
     // Prevents default page reload on submit
@@ -83,9 +92,34 @@ add_button.addEventListener("click", (event) => {
     add_object({full_name, destination, car_brand, order_date, price})
     toggleMainPage();
     clear_inputs();
-}
+}) 
 
-) 
+
+search_button.addEventListener("click", (event) => {
+  const find_object = objects.filter(
+    (obj) => obj.full_name.search(input_search.value) !== -1
+  );
+    object_list_search(find_object);
+}
+);
+
+cancel_button.addEventListener("click", () => {
+  input_search.value = ""; 
+}
+)
+
+sort_button.addEventListener("change", () => {
+  const sort_objects = objects.sort(function(a,b) {
+    let priceA = Number(a.price),
+      priceB = Number(b.price);
+    if (priceA < priceB) return -1;
+    if (priceA > priceB) return 1;
+    return 0;
+  });
+  object_list_search(sort_objects);
+}
+)
+
 
 // Toggle functions
 
