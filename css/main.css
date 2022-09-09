@@ -50,7 +50,6 @@
   .create-block * {
     margin: 0.5rem 0;
   }
-  
 
   .desc{
     padding: 20px 10px; 
@@ -69,6 +68,14 @@
   .count-price {
     flex-direction: column;
     margin-bottom: 300px;
+  }
+
+  .block_price {
+    display: flex; 
+  }
+
+  #count_price {
+    margin-top: 10px;
   }
   
   .orders_list {

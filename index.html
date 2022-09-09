@@ -18,12 +18,10 @@
     </nav>
     <div class="search_block">
       <input placeholder="Client name.." id="input_search">
-      <button type="button" id="search_btn">Search</button>
-      <button type="button" id="cancel_search_btn" class="cancel-button">Cancel</button>
+      <button type="button" id="search_btn" class="btn_card" style="width: 100px;">Search</button>
+      <button type="button" id="cancel_search_btn" class="cancel-button btn_card_cansel" style="width: 100px;">Cancel</button>
     </div>
   </header>
-
-
   <main id="main_page" class="main__container">
     <div class="main__container manager">
       <div class="sort-goods">
@@ -35,10 +33,11 @@
       </div>
       <div class="count-price">
         <hr>
-        <h3>Count price of all orders</h3>
-        <button type="button" class="btn-primary" id="count_price_btn">Count</button>
-        <div id="counted_price">
+        <div class="block_price"> 
+          <h3>Count price of all orders:</h3>
+          <span id="count_price"></span>
         </div>
+        <button type="button" class="btn-primary btn_card" id="count_price_btn" style="width: 100px;">Count</button>
       </div>
     </div>
     <div class="main__container manager-orders">
@@ -67,8 +66,6 @@
         <span>Price:</span>
       <input placeholder="Price in $" type="number" id="price_input">
       </div>
-      
-      
       <button type="submit" class="btn-download" id="submit_btn">Add order</button>
     </form>
   </main>

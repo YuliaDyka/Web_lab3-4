@@ -7,6 +7,7 @@ const brandInput = document.getElementById("brand_input");
 const order_dateInput = document.getElementById("order_date_input");
 const priceInput = document.getElementById("price_input");
 const input_search = document.getElementById("input_search")
+const count_price = document.getElementById("count_price")
 
 
 let objects = [];
@@ -16,10 +17,10 @@ const object_template = ({id, full_name, destination, car_brand, order_date, pri
 <li id="${id}" class="item">
   <div class="card">
     <h4 class="card-type">Name: ${full_name}</h4>
-    <h4 class="card-price">Price: ${destination}$</h4>
+    <h4 class="card-price">Destination: ${destination}</h4>
     <h4 class="card-brand">Brand: ${car_brand}</h4>
     <h4 class="card-production-date">Date: ${order_date}</h4>
-    <h4 class="card-production-date">Price: ${price}</h4>
+    <h4 class="card-production-date">Price: ${price}$</h4>
     <div class="block_btn">
       <button id="edit_btn${id}" type="button" class="btn-primary btn_card" onclick="editFunc(${id})">
         Edit
@@ -28,6 +29,7 @@ const object_template = ({id, full_name, destination, car_brand, order_date, pri
     </div>
 </li>`;
 
+const oject_count_template = (count) => `<h4>${count}$</h4>`
 
 const clear_inputs =() => {
   nameInput.value = "";
@@ -50,6 +52,14 @@ const object_list_search = (objects) => {
     add_object_to_page(obj)
   }
 }
+
+const add_count_price = (price) => {
+  count_price.innerHTML = "";
+  count_price.insertAdjacentHTML(
+    "beforeend",
+    oject_count_template(price)
+  );
+};
 
 const get_values = () => {
   return {
@@ -83,6 +93,7 @@ const add_button = document.getElementById("submit_btn")
 const search_button = document.getElementById("search_btn")
 const cancel_button = document.getElementById("cancel_search_btn")
 const sort_button = document.getElementById("sort_objects")
+const count_price_btn = document.getElementById("count_price_btn")
 
 add_button.addEventListener("click", (event) => {
     // Prevents default page reload on submit
@@ -105,20 +116,33 @@ search_button.addEventListener("click", (event) => {
 
 cancel_button.addEventListener("click", () => {
   input_search.value = ""; 
+  object_list_search(objects);
 }
 )
 
-sort_button.addEventListener("change", () => {
-  const sort_objects = objects.sort(function(a,b) {
-    let priceA = Number(a.price),
-      priceB = Number(b.price);
-    if (priceA < priceB) return -1;
-    if (priceA > priceB) return 1;
-    return 0;
-  });
-  object_list_search(sort_objects);
+sort_button.addEventListener("change", function() {
+  if (this.checked) {
+    const sort_objects = objects.slice();
+    sort_objects.sort(function(a,b) {
+      let priceA = Number(a.price),
+        priceB = Number(b.price);
+      if (priceA < priceB) return -1;
+      if (priceA > priceB) return 1;
+      return 0;
+    });
+    object_list_search(sort_objects);
+
+  } else{
+    object_list_search(objects);
+  }
 }
 )
+
+count_price_btn.addEventListener("click", () => {
+  let count = 0;
+  const x = objects.filter(o => count += Number(o.price));
+  add_count_price(count); 
+})
 
 
 // Toggle functions
