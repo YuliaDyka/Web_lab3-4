@@ -1,3 +1,4 @@
+import {deleteOreder, getAllOrders, postOrders} from './api.js'
 // Dom functions
 
 const object_container = document.getElementById("orders_list");
@@ -19,14 +20,15 @@ let objects = [];
 let id = 0;
 let currentId = -1;
 let cuurenrDeleteId = -1;
+let count = 0;
 
-const object_template = ({id, full_name, destination, car_brand, order_date, price}) => `
+const object_template = ({id, full_name, destination, car_brand, dateStr, price}) => `
 <li id="${id}" class="item">
   <div class="card">
     <h4 class="card-type">Name: ${full_name}</h4>
     <h4 class="card-price">Destination: ${destination}</h4>
     <h4 class="card-brand">Brand: ${car_brand}</h4>
-    <h4 class="card-production-date">Date: ${order_date}</h4>
+    <h4 class="card-production-date">Date: ${dateStr}</h4>
     <h4 class="card-production-date">Price: ${price}$</h4>
     <div class="block_btn">
       <button id="edit_btn${id}" type="button" class="btn-primary btn_card" onclick="clickEdit(${id})">Edit</button>
@@ -45,21 +47,24 @@ const clear_inputs =() => {
 }
 
 const clear_edits = () => {
-  edit_name_input.value = "";
+  edit_name_input.value = ""
   edit_destinationInput.value  = "";
   edit_brand_input.value = "";
-  edit_order_date_input.value = "";
+  edit_order_date_input.value = "";S
   edit_price_input.value = "";
  };
 
 const add_object_to_page = ({id, full_name, destination, car_brand, order_date, price}) => {
+  var date = new Date(order_date);
+  var dateStr = date.toLocaleDateString();
+
   object_container.insertAdjacentHTML(
     "beforeend",
-    object_template({id, full_name, destination, car_brand, order_date, price})
+    object_template({id, full_name, destination, car_brand, dateStr, price})
   );
 };
 
-const object_list_search = (objects) => {
+const object_list_displaed = (objects) => {
   object_container.innerHTML = "";
   for (let obj of objects) {
     add_object_to_page(obj)
@@ -95,21 +100,6 @@ const getEditValues = () => {
  };
 
 
-const add_object = ({full_name, destination, car_brand, order_date, price}) => {
-  const new_object = {
-    id: id,
-    full_name: full_name,
-    destination: destination,
-    car_brand: car_brand,
-    order_date: order_date,
-    price: price,  
-  };
-  id += 1;
-  objects.push(new_object);
-  add_object_to_page(new_object);
-
-} 
-
 // Event Block
 
 const add_button = document.getElementById("submit_btn")
@@ -123,6 +113,8 @@ add_button.addEventListener("click", (event) => {
     // Prevents default page reload on submit
     event.preventDefault();
 
+    let id  = objects.length;
+    console.log(id)
     const { full_name, destination, car_brand, order_date, price} = get_values();
     if(full_name === "" || destination === "" || car_brand === "" || order_date === "" || price === ""){
       alert("The fields must not be empty!");
@@ -131,24 +123,32 @@ add_button.addEventListener("click", (event) => {
       alert("The price must be positive!");
       return;
     } else {
-      add_object({full_name, destination, car_brand, order_date, price})
+     // add_object({full_name, destination, car_brand, order_date, price})
+     postOrders( {
+      id,
+      full_name,
+      destination, 
+      car_brand,
+      order_date,
+      price
+    }).then(refetchAllOrders());
       toggleMainPage();
       clear_inputs();
     }
 
-}) 
+});
 
 search_button.addEventListener("click", (event) => {
   const find_object = objects.filter(
     (obj) => obj.full_name.search(input_search.value) !== -1
   );
-    object_list_search(find_object);
+    object_list_displaed(find_object);
 }
 );
 
 cancel_button.addEventListener("click", () => {
   input_search.value = ""; 
-  object_list_search(objects);
+  object_list_displaed(objects);
 }
 )
 
@@ -162,10 +162,10 @@ sort_button.addEventListener("change", function() {
       if (priceA > priceB) return 1;
       return 0;
     });
-    object_list_search(sort_objects);
+    object_list_displaed(sort_objects);
 
   } else{
-    object_list_search(objects);
+    object_list_displaed(objects);
   }
 }
 )
@@ -196,7 +196,7 @@ edit_btn.addEventListener("click", (event) => {
 
     clear_edits();
     toggleEdit();
-    object_list_search(objects);
+    object_list_displaed(objects);
   }
 })
 
@@ -210,7 +210,7 @@ const createPage = document.getElementById("create_page");
 const editPage = document.getElementById("edit_page")
 
 
-function toggleMainPage() {
+window.toggleMainPage = function toggleMainPage() {
   if (mainPage.classList.contains(CLOSE_CLASSNAME)) {
     mainPage.classList.remove(CLOSE_CLASSNAME);
   }
@@ -219,7 +219,7 @@ function toggleMainPage() {
   }
 }
 
-function toggleCreatePage() {
+window.toggleCreatePage = function toggleCreatePage() {
   console.log("CREATE BLOCK");
   if (!mainPage.classList.contains(CLOSE_CLASSNAME)) {
     mainPage.classList.add(CLOSE_CLASSNAME);
@@ -229,12 +229,12 @@ function toggleCreatePage() {
   }
 }
 
-function toggleEdit() {
+window.toggleEdit = function toggleEdit() {
   mainPage.classList.toggle(CLOSE_CLASSNAME);
   editPage.classList.toggle(OPEN_CLASSNAME);
 }
 
-function clickEdit(current_id){
+window.clickEdit = function clickEdit(current_id){
   toggleEdit();
   currentId = current_id; 
   let current_obj = objects.find(ob => ob.id === currentId);
@@ -247,12 +247,17 @@ function clickEdit(current_id){
   edit_price_input.value = current_obj.price;
 }
 
-function clickDelete(current_id){
-  cuurenrDeleteId = current_id;
-  let current_obj = objects.find(ob => ob.id === current_id);
-  let index = objects.indexOf(current_obj);
-  if(index > -1){
-    objects.splice(index, 1);
-  }
-  object_list_search(objects);
+window.clickDelete = function clickDelete(current_id){
+ let y =  deleteOreder(current_id).then(refetchAllOrders);
+
 }
+
+// await functions from db
+
+const refetchAllOrders = async () => {
+  const allOrders = await getAllOrders();
+  objects = allOrders;
+  object_list_displaed(objects);
+}
+
+refetchAllOrders();
