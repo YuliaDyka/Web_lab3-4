@@ -1,4 +1,4 @@
-import {deleteOreder, getAllOrders, postOrders} from './api.js'
+import {deleteOreder, editOrders, getAllOrders, postOrders} from './api.js'
 // Dom functions
 
 const object_container = document.getElementById("orders_list");
@@ -50,13 +50,13 @@ const clear_edits = () => {
   edit_name_input.value = ""
   edit_destinationInput.value  = "";
   edit_brand_input.value = "";
-  edit_order_date_input.value = "";S
+  edit_order_date_input.value = "";
   edit_price_input.value = "";
  };
 
 const add_object_to_page = ({id, full_name, destination, car_brand, order_date, price}) => {
-  var date = new Date(order_date);
-  var dateStr = date.toLocaleDateString();
+  let date = new Date(order_date);
+  let dateStr = date.toLocaleDateString();
 
   object_container.insertAdjacentHTML(
     "beforeend",
@@ -114,7 +114,7 @@ add_button.addEventListener("click", (event) => {
     event.preventDefault();
 
     let id  = objects.length;
-    console.log(id)
+    id = id+1;
     const { full_name, destination, car_brand, order_date, price} = get_values();
     if(full_name === "" || destination === "" || car_brand === "" || order_date === "" || price === ""){
       alert("The fields must not be empty!");
@@ -123,7 +123,6 @@ add_button.addEventListener("click", (event) => {
       alert("The price must be positive!");
       return;
     } else {
-     // add_object({full_name, destination, car_brand, order_date, price})
      postOrders( {
       id,
       full_name,
@@ -186,17 +185,10 @@ edit_btn.addEventListener("click", (event) => {
     alert("The price must be positive!");
     return;
   } else {
-
-    let edit_obj = objects.find(ob => ob.id === currentId);
-    edit_obj.full_name = full_name;
-    edit_obj.destination = destination;
-    edit_obj.car_brand = car_brand;
-    edit_obj.order_date = order_date;
-    edit_obj.price = price;
+    editOrders(currentId, {full_name, destination, car_brand, order_date, price}).then(refetchAllOrders);
 
     clear_edits();
     toggleEdit();
-    object_list_displaed(objects);
   }
 })
 
@@ -239,11 +231,20 @@ window.clickEdit = function clickEdit(current_id){
   currentId = current_id; 
   let current_obj = objects.find(ob => ob.id === currentId);
 
-  console.log(currentId);
+  let date = new Date(current_obj.order_date);
+  
+  let day = ("0" + date.getDate()).slice(-2);
+  let month = ("0" + (date.getMonth() + 1)).slice(-2);
+
+  let today = date.getFullYear()+"-"+(month)+"-"+(day) ;
+
+
+  
+  console.log(date);
   edit_name_input.value = current_obj.full_name;
   edit_destinationInput.value = current_obj.destination;
   edit_brand_input.value = current_obj.car_brand;
-  edit_order_date_input.value = current_obj.order_date;
+  edit_order_date_input.value = today;
   edit_price_input.value = current_obj.price;
 }
 

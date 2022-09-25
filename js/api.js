@@ -28,8 +28,9 @@ const baseRequest = async ({ urlPath = "", method = "GET", body = null }) => {
   export const postOrders = (body) =>
     baseRequest({ method: "POST", body });
 
-//   export const editItem = (id, body) =>
-//     baseRequest({ urlPath: `/${id}`, method: "PUT", body });
+  export const editOrders = async (id, body) =>{
+    await baseRequest({ urlPath: `/${id}`, method: "PATCH", body });
+  }
   
   export const deleteOreder = async (id) => {
     await baseRequest({ urlPath: `/${id}`, method: "DELETE" });
